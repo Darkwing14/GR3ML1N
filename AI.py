@@ -48,7 +48,10 @@ class Context:
 
     Attributes:
         system:   optional system prompt, sent at the start of every request.
-        messages: list of {"role": "user"|"assistant", "content": str}.
+                  Change it any time (ctx.system = "...") and the next request
+                  uses the new value.
+        messages: list of {"role": str, "content": str}. Any role is allowed,
+                  including "system" for mid-conversation instructions.
     """
 
     def __init__(self, system=None, messages=None):
@@ -56,8 +59,8 @@ class Context:
         self.messages = list(messages) if messages else []
 
     def add(self, role, content):
-        if role not in ("user", "assistant"):
-            raise ValueError("role must be 'user' or 'assistant'")
+        """Append a message. Any role is allowed ('system', 'user',
+        'assistant', ...), so system messages can be inserted mid-conversation."""
         self.messages.append({"role": role, "content": content})
 
     def clear(self):
